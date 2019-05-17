@@ -23,6 +23,17 @@ function LinkItem({ link, index, showCount, history }) {
     }
   }
 
+  function handleDelete() {
+    const linkRef = firebase.db.collection('links').doc(link.id);
+    linkRef.delete().then(() => {
+      console.log(`document with id ${link.id} deleted`);
+    }).catch(err => {
+      console.error('error deleting', err)
+    })
+  }
+
+  const postedByAuthUser = user && user.uid === link.postedBy.id;
+
   return (
     <div className="flex items-start mt2">
       <div className="flex items-center">
@@ -39,6 +50,12 @@ function LinkItem({ link, index, showCount, history }) {
           <Link to={`/link/${link.id}`}>
             {link.comments.length > 0 ? `${link.comments.length} comments` : 'discuss'}
           </Link>
+          {postedByAuthUser && (
+            <>
+              {' | '}
+              <span className="delete-button" onClick={handleDelete}>delete</span>
+            </>
+          )}
         </div>
       </div>
     </div>
