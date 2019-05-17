@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import useFormValidation from "./useFormValidation";
 import validateLogin from "./validateLogin";
 import firebase from "../../firebase";
@@ -27,6 +28,7 @@ function Login(props) {
       login
         ? await firebase.login(email, password)
         : await firebase.register(name, email, password);
+      props.history.push('/');
     } catch (err) {
       console.log(err);
       setFirebaseError(err.message);
@@ -65,7 +67,7 @@ function Login(props) {
           className={errors.password && "error-input"}
           name="password"
           type="password"
-          placeholder="Choose a secure password"
+          placeholder="Password"
         />
         {errors.password && <p className="error-text">{errors.password}</p>}
         {firebaseError && <p className="error-text">{firebaseError}</p>}
@@ -87,6 +89,11 @@ function Login(props) {
           </button>
         </div>
       </form>
+      {login && (
+        <div className="forgot-password">
+          <Link to='/forgot'>Forgot password?</Link>
+        </div>
+      )}
     </div>
   );
 }
